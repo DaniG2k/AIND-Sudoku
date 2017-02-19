@@ -38,28 +38,28 @@ def naked_twins(values):
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
     
-    # Make a dictionary of {'position': 'values'}
-    # Returns something like
+    # Make a dictionary of {'position': 'values'} for peers
+    # with length > 1. Returns something like:
     # {'E3': '379', 'F3': '23', 'D3': '2379', 'I1': '23'}
     new_dic = {}
     for box in boxes:
         for peer in peers[box]:
             if len(values[peer]) > 1:
                 new_dic[peer] = values[peer]
-
+    
     # Check to see which values are twins
     twin_vals = []
     for key1, val1 in new_dic.items():
         for key2, val2 in new_dic.items():
             if val1 == val2 and key1 != key2 and val1 not in twin_vals:
                 twin_vals.append(val1)
-
+    
     # Remove twin values from new_dic
-    for twin_val in twin_vals: 
+    for twin_val in twin_vals:
         for key, val in new_dic.items():
             if twin_val != val:
-                re.sub(re.compile('[' + re.escape(twin_val) + ']'), '', new_dic[key])
-
+                new_string = new_dic[key].replace(twin_val, '')
+                new_dic[key] = new_string
     # Set the new values in the main dictionary
     for key, val in new_dic.items():
         values[key] = val
@@ -123,11 +123,14 @@ def reduce_puzzle(values):
         # Check how many boxes have a determined value
         solved_values_before = len([box for box in values.keys() if len(values[box]) == 1])
 
-        # Your code here: Use the Eliminate Strategy
+        # Eliminate Strategy
         values = eliminate(values)
 
-        # Your code here: Use the Only Choice Strategy
+        # Only Choice Strategy
         values = only_choice(values)
+
+        # Naked Twins Strategy
+        values = naked_twins(values)
 
         # Check how many boxes have a determined value, to compare
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
@@ -155,7 +158,7 @@ def search(values):
         if attempt:
             return attempt
 
-def solve(grid):
+#def solve(grid):
     """
     Find the solution to a Sudoku grid.
     Args:
@@ -179,3 +182,4 @@ def solve(grid):
 #     except:
 #         print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
 grid = '1.4.9..68956.18.34..84.695151.....868..6...1264..8..97781923645495.6.823.6.854179'
+display(reduce_puzzle(grid_values(grid)))
