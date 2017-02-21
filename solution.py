@@ -1,4 +1,3 @@
-import re
 from IPython import embed
 
 assignments = []
@@ -31,14 +30,14 @@ def get_duplicates(ary):
     dups = []
     for i, v1 in enumerate(ary):
         for j, v2 in enumerate(ary):
-            if i != j and v1 == v2 and v1 not in dups:
+            if i != j and v1 == v2 and v1 not in dups and len(v1) == 2:
                 dups.append(v1)
     return dups
 
 def is_subset(s1, s2):
     a1 = [c for c in s1]
     a2 = [c for c in s2]
-    return set(a1).issubset(a2)
+    return any(n in a1 for n in a2)
 
 def naked_twins(values):
     """Eliminate values using the naked twins strategy.
@@ -52,26 +51,24 @@ def naked_twins(values):
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
     for pos, current_units in units.items():
-        possible_boxes = []
+        twins = []
         for unit in current_units:
             # Get all values for current unit
-            for box in unit:
-                possible_boxes.append(values[box])
+            possible_boxes = [values[box] for box in unit]
             # Get all values with len > 1
-            longer_than_1 = []
-            for box in possible_boxes:
-                if len(box) > 1:
-                    longer_than_1.append(box)
+            longer_than_1 = [box for box in possible_boxes if len(box) > 1]
             # Get all twin values
-            twin_vals = get_duplicates(longer_than_1)
-            # If there are twin values, remove them from unit
-            # unless the box contains exactly those values.
-            for twin_val in twin_vals:
-                for box in unit:
-                    v = values[box]
-                    if len(v) > 1 and twin_val != v and is_subset(twin_val, v):
-                        stripped_val = ''.join(sorted(v)).replace(''.join(sorted(twin_val)), '')
-                        assign_value(values, box, stripped_val)
+            twins = get_duplicates(longer_than_1)
+            
+        # If there are twin values, remove them from unit
+        # unless the box contains exactly those values.
+        for twin in twins:
+            for box in unit:
+                v = values[box]
+                if len(v) > 1 and twin != v and is_subset(twin, v):
+                    stripped_list = [n for n in sorted(v) if n not in sorted(twin)]
+                    stripped_val = ''.join(stripped_list)
+                    assign_value(values, box, stripped_val)
     return values
 
 
@@ -175,7 +172,7 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
-    return search(reduce_puzzle(grid_values(grid)))
+    return search(grid_values(grid))
     
 
 if __name__ == '__main__':
@@ -192,3 +189,4 @@ if __name__ == '__main__':
         print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
 #grid = '1.4.9..68956.18.34..84.695151.....868..6...1264..8..97781923645495.6.823.6.854179'
 #display(reduce_puzzle(grid_values(grid)))
+#display(solve(grid))
