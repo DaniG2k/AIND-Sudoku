@@ -48,7 +48,6 @@ def naked_twins(values):
         the values dictionary with the naked twins eliminated from peers.
     """
     for pos, current_units in units.items():
-        twins = []
         for unit in current_units:
             # Get all values for current unit
             possible_boxes = [values[box] for box in unit]
@@ -56,15 +55,15 @@ def naked_twins(values):
             len_2 = [box for box in possible_boxes if len(box) == 2]
             # Get all twin values
             twins = get_duplicates(len_2)
-        # If there are twin values, remove them from unit
-        # unless the box contains exactly those values.
-        for twin in twins:
-            for box in unit:
-                v = values[box]
-                if len(v) > 1 and twin != v and is_subset(twin, v):
-                    stripped_list = [n for n in sorted(v) if n not in sorted(twin)]
-                    stripped_val = ''.join(stripped_list)
-                    assign_value(values, box, stripped_val)
+            # If there are twin values, remove them from unit
+            # unless the box contains exactly those values.
+            for twin in twins:
+                for box in unit:
+                    v = values[box]
+                    if len(v) > 1 and twin != v and is_subset(twin, v):
+                        stripped_list = [n for n in sorted(v) if n not in sorted(twin)]
+                        stripped_val = ''.join(stripped_list)
+                        assign_value(values, box, stripped_val)
     return values
 
 
