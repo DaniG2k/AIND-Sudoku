@@ -12,9 +12,11 @@ row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
 
+# Create two diagonal units:
 diagonal_1 = [[rows[i]+cols[i] for i in range(len(rows))]]
 diagonal_2 = [[rows[i]+cols_rev[i] for i in range(len(rows))]]
 
+# Add the diagonal units to unitlist
 unitlist = row_units + column_units + square_units + diagonal_1 + diagonal_2
 
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
