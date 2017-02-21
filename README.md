@@ -3,11 +3,12 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: We use the twin values that are locked down to two specific boxes. This means that any other box cannot contain the values present in the twins. This constraint helps eliminate potential values from sudoku boxes.
+A: We use the twin values that are locked down to two specific boxes. The implication here is that any other box cannot contain the values present in the twins. This constraint helps eliminate potential values from other boxes.
 
 # Question 2 (Diagonal Sudoku)
-Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+Q: How do we use constraint propagation to solve the diagonal sudoku problem?
+
+A: We create two new units along the sudoku board's diagonals, and go to solve the sudoku box taking them into account. While adding units increases the number of checks, it also increases the number of value constraints on the board. 
 
 ### Install
 
