@@ -136,7 +136,7 @@ def reduce_puzzle(values):
 
         # Only Choice Strategy
         values = only_choice(values)
-        
+
         # Naked Twins Strategy
         values = naked_twins(values)
 
@@ -175,7 +175,7 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
-    pass
+    return search(reduce_puzzle(grid_values(grid)))
     
 
 if __name__ == '__main__':
