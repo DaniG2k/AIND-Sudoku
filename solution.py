@@ -1,5 +1,4 @@
-from IPython import embed
-
+#from IPython import embed
 assignments = []
 rows = 'ABCDEFGHI'
 cols = '123456789'
