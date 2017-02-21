@@ -30,7 +30,7 @@ def get_duplicates(ary):
     dups = []
     for i, v1 in enumerate(ary):
         for j, v2 in enumerate(ary):
-            if i != j and v1 == v2 and v1 not in dups and len(v1) == 2:
+            if i != j and v1 == v2 and v1 not in dups:
                 dups.append(v1)
     return dups
 
@@ -47,19 +47,15 @@ def naked_twins(values):
     Returns:
         the values dictionary with the naked twins eliminated from peers.
     """
-
-    # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
     for pos, current_units in units.items():
         twins = []
         for unit in current_units:
             # Get all values for current unit
             possible_boxes = [values[box] for box in unit]
-            # Get all values with len > 1
-            longer_than_1 = [box for box in possible_boxes if len(box) > 1]
+            # Get all values with length 2
+            len_2 = [box for box in possible_boxes if len(box) == 2]
             # Get all twin values
-            twins = get_duplicates(longer_than_1)
-            
+            twins = get_duplicates(len_2)
         # If there are twin values, remove them from unit
         # unless the box contains exactly those values.
         for twin in twins:
