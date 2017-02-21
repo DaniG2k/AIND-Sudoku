@@ -1,4 +1,5 @@
 import re
+from IPython import embed
 
 assignments = []
 rows = 'ABCDEFGHI'
@@ -26,6 +27,19 @@ def assign_value(values, box, value):
         assignments.append(values.copy())
     return values
 
+def get_duplicates(ary):
+    dups = []
+    for i, v1 in enumerate(ary):
+        for j, v2 in enumerate(ary):
+            if i != j and v1 == v2 and v1 not in dups:
+                dups.append(v1)
+    return dups
+
+def is_subset(s1, s2):
+    a1 = [c for c in s1]
+    a2 = [c for c in s2]
+    return set(a1).issubset(a2)
+
 def naked_twins(values):
     """Eliminate values using the naked twins strategy.
     Args:
@@ -37,34 +51,28 @@ def naked_twins(values):
 
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
-    
-    # Make a dictionary of {'position': 'values'} for peers
-    # with length > 1. Returns something like:
-    # {'E3': '379', 'F3': '23', 'D3': '2379', 'I1': '23'}
-    new_dic = {}
-    for box in boxes:
-        for peer in peers[box]:
-            if len(values[peer]) > 1:
-                new_dic[peer] = values[peer]
-    
-    # Check to see which values are twins
-    twin_vals = []
-    for key1, val1 in new_dic.items():
-        for key2, val2 in new_dic.items():
-            if val1 == val2 and key1 != key2 and val1 not in twin_vals:
-                twin_vals.append(val1)
-    
-    # Remove twin values from new_dic
-    for twin_val in twin_vals:
-        for key, val in new_dic.items():
-            if twin_val != val:
-                new_string = new_dic[key].replace(twin_val, '')
-                new_dic[key] = new_string
-    # Set the new values in the main dictionary
-    for key, val in new_dic.items():
-        values[key] = val
-
-    return values        
+    for pos, current_units in units.items():
+        possible_boxes = []
+        for unit in current_units:
+            # Get all values for current unit
+            for box in unit:
+                possible_boxes.append(values[box])
+            # Get all values with len > 1
+            longer_than_1 = []
+            for box in possible_boxes:
+                if len(box) > 1:
+                    longer_than_1.append(box)
+            # Get all twin values
+            twin_vals = get_duplicates(longer_than_1)
+            # If there are twin values, remove them from unit
+            # unless the box contains exactly those values.
+            for twin_val in twin_vals:
+                for box in unit:
+                    v = values[box]
+                    if len(v) > 1 and twin_val != v and is_subset(twin_val, v):
+                        stripped_val = ''.join(sorted(v)).replace(''.join(sorted(twin_val)), '')
+                        assign_value(values, box, stripped_val)
+    return values
 
 
 def grid_values(grid):
@@ -128,7 +136,7 @@ def reduce_puzzle(values):
 
         # Only Choice Strategy
         values = only_choice(values)
-
+        
         # Naked Twins Strategy
         values = naked_twins(values)
 
@@ -158,7 +166,7 @@ def search(values):
         if attempt:
             return attempt
 
-#def solve(grid):
+def solve(grid):
     """
     Find the solution to a Sudoku grid.
     Args:
@@ -167,19 +175,20 @@ def search(values):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
+    pass
     
 
-# if __name__ == '__main__':
-#     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
-#     display(solve(diag_sudoku_grid))
+if __name__ == '__main__':
+    diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
+    display(solve(diag_sudoku_grid))
 
-#     try:
-#         from visualize import visualize_assignments
-#         visualize_assignments(assignments)
+    try:
+        from visualize import visualize_assignments
+        visualize_assignments(assignments)
 
-#     except SystemExit:
-#         pass
-#     except:
-#         print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
-grid = '1.4.9..68956.18.34..84.695151.....868..6...1264..8..97781923645495.6.823.6.854179'
-display(reduce_puzzle(grid_values(grid)))
+    except SystemExit:
+        pass
+    except:
+        print('We could not visualize your board due to a pygame issue. Not a problem! It is not a requirement.')
+#grid = '1.4.9..68956.18.34..84.695151.....868..6...1264..8..97781923645495.6.823.6.854179'
+#display(reduce_puzzle(grid_values(grid)))
