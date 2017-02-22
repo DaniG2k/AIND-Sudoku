@@ -2,13 +2,14 @@
 ## Introductory Project: Diagonal Sudoku Solver
 
 # Question 1 (Naked Twins)
-Q: How do we use constraint propagation to solve the naked twins problem?  
-A: We use the twin values that are locked down to two specific boxes. The implication here is that any other box cannot contain the values present in the twins. This constraint helps eliminate potential values from other boxes.
+Q: How do we use constraint propagation to solve the naked twins problem?
+
+A: If there are two values of length 2, we know that those values must exist in the two boxes, so it is safe to eliminate them from the peers. The implication here is that any other box cannot contain the values present in the twins, as the twins are locked to one of two values. This constraint helps eliminate potential values from other boxes, reducing the number of checks we have to make to solve the sudoku.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?
 
-A: We create two new units along the sudoku board's diagonals, and go to solve the sudoku box taking them into account. While adding units increases the number of checks, it also increases the number of value constraints on the board. 
+A: We create two new units along the sudoku board's diagonals. The implication here is that we have an additional two units of values from 1 to 9, which would constrain the board's potential values as we solve the sudoku. While adding units increases the number of checks (or iterations), it also increases the number of value constraints on the board, because we know that each diagonal must contain the values from 1 to 9.
 
 ### Install
 

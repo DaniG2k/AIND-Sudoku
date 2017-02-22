@@ -33,6 +33,13 @@ def assign_value(values, box, value):
     return values
 
 def get_duplicates(ary):
+    """
+    Args:
+        ary(array): an array of integers or strings.
+
+    Returns:
+        duplicate items in the list.
+    """
     dups = []
     for i, v1 in enumerate(ary):
         for j, v2 in enumerate(ary):
@@ -41,17 +48,30 @@ def get_duplicates(ary):
     return dups
 
 def is_subset(s1, s2):
+    """
+    Args:
+        s1(string)
+        s2(string)
+
+    Returns:
+        True if any element from the first string is
+        present in the second, False otherwise.
+    """
     a1 = [c for c in s1]
     a2 = [c for c in s2]
     return any(n in a1 for n in a2)
 
 def naked_twins(values):
-    """Eliminate values using the naked twins strategy.
+    """
+    Strategy #3:
+        Go through all the units, and if there is a unit
+        that contains twins of length 2, eliminate those two
+        digits from the box's peers.
     Args:
-        values(dict): a dictionary of the form {'box_name': '123456789', ...}
-
+        values(dict): The sudoku in dictionary form
+    
     Returns:
-        the values dictionary with the naked twins eliminated from peers.
+        The modified sudoku dictionary, with the naked twins eliminated from peers.
     """
     for pos, current_units in units.items():
         for unit in current_units:
@@ -108,6 +128,17 @@ def display(values):
     return
 
 def eliminate(values):
+    """
+    Strategy #1:
+        Iterate over all the boxes in the puzzle that only
+        have one value assigned to them, and remove this
+        value from every one of its peers.
+    Args:
+        values(dict): The sudoku in dictionary form
+    
+    Returns:
+        The modified sudoku dictionary.
+    """
     solved_values = [box for box in values.keys() if len(values[box]) == 1]
     for box in solved_values:
         digit = values[box]
@@ -116,6 +147,17 @@ def eliminate(values):
     return values
 
 def only_choice(values):
+    """
+    Strategy #2:
+        Go through all the units, and if there is a unit
+        with a digit that only fits in one possible box,
+        assign that digit to that box.
+    Args:
+        values(dict): The sudoku in dictionary form
+    
+    Returns:
+        The modified sudoku dictionary.
+    """
     for unit in unitlist:
         for digit in '123456789':
             dplaces = [box for box in unit if digit in values[box]]
